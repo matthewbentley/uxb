@@ -1,3 +1,4 @@
+# Generic connector
 class Connector
   def initialize(device, index, type)
     @device = device
@@ -9,9 +10,11 @@ class Connector
   attr_reader :type, :index, :peer, :device
 end
 
+# Generic message
 class Message
 end
 
+# Message with an integer value
 class BinaryMessage < Message
   def initialize(value)
     @value = value
@@ -24,6 +27,7 @@ class BinaryMessage < Message
   end
 end
 
+# Generic device
 class Device
   attr_reader :product_code, :serial_number, :version, :device_class,
               :connectors
@@ -37,7 +41,9 @@ class Device
   end
 end
 
+# Abstract device
 class AbstractDevice < Device
+  # Builds an abstract device
   class Builder
     attr_reader :product_code, :version, :serial_number
 
@@ -77,7 +83,9 @@ class AbstractDevice < Device
   end
 end
 
+# Hub - a device
 class Hub < AbstractDevice
+  # Builds a hub
   class Builder < AbstractDevice::Builder
     def initialize(version)
       super(version)
