@@ -1,13 +1,13 @@
 # Generic connector
 class Connector
+  attr_reader :type, :index, :peer, :device
+
   def initialize(device, index, type)
     @device = device
     @type = type
     @index = index
     @peer = nil
   end
-
-  attr_reader :type, :index, :peer, :device
 end
 
 # Generic message
@@ -16,11 +16,11 @@ end
 
 # Message with an integer value
 class BinaryMessage < Message
+  attr_reader :value
+
   def initialize(value)
     @value = value
   end
-
-  attr_reader :value
 
   def ==(other)
     value == other.value
