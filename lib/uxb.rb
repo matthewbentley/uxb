@@ -1,6 +1,7 @@
 # Generic connector
 class Connector
-  attr_reader :type, :index, :peer, :device
+  attr_reader :type, :index, :device
+  attr_accessor :peer
 
   def initialize(device, index, type)
     @device = device
@@ -27,26 +28,14 @@ class BinaryMessage < Message
   end
 end
 
-# Generic device
+# Abstract device
 class Device
+  extend Forwardable
   attr_reader :product_code, :serial_number, :version, :device_class,
               :connectors
 
-  def connector(index)
-    connectors[index]
-  end
-
-  def connector_count
-    connectors.length
-  end
-end
-
-# Abstract device
-class AbstractDevice < Device
   # Builds an abstract device
   class Builder
-    attr_reader :product_code, :version, :serial_number
-
     def initialize(version)
       @version = version
     end
@@ -81,12 +70,15 @@ class AbstractDevice < Device
     @connectors = builder.connectors
     @version = builder.version
   end
+
+  def_delegator :@connectors, :[], :connector
+  def_delegator :@connectors, :length, :connector_count
 end
 
 # Hub - a device
-class Hub < AbstractDevice
+class Hub < Device
   # Builds a hub
-  class Builder < AbstractDevice::Builder
+  class Builder < Device::Builder
     def initialize(version)
       super(version)
       self.connectors = []
@@ -114,6 +106,5 @@ class Hub < AbstractDevice
 
   def initialize(builder)
     super
-    # TODO: handle exception??
   end
 end
