@@ -1,3 +1,5 @@
+require 'forwardable'
+
 # Generic connector
 class Connector
   attr_reader :type, :index, :device
@@ -29,16 +31,10 @@ class BinaryMessage < Message
 end
 
 # Abstract device
-class Device
-  extend Forwardable
-  attr_reader :product_code, :serial_number, :version, :device_class,
-              :connectors
-
+module Device
   # Builds an abstract device
   class Builder
-    def initialize(version)
-      @version = version
-    end
+    attr_reader :version, :product_code, :serial_number
 
     def product_code=(code)
       @product_code = code
@@ -51,7 +47,7 @@ class Device
     end
 
     def connectors=(conns)
-      @connectors = conns
+      @connectors = conns.clone
       self
     end
 
@@ -63,24 +59,19 @@ class Device
       raise 'Version number is needed' if version.nil?
     end
   end
-
-  def initialize(builder)
-    @product_code = builder.product_code
-    @serial_number = builder.serial_number
-    @connectors = builder.connectors
-    @version = builder.version
-  end
-
-  def_delegator :@connectors, :[], :connector
-  def_delegator :@connectors, :length, :connector_count
 end
 
 # Hub - a device
-class Hub < Device
+class Hub
+  extend Forwardable
+  attr_reader :product_code, :serial_number, :version, :device_class,
+              :connectors
+
+  extend Device
   # Builds a hub
   class Builder < Device::Builder
     def initialize(version)
-      super(version)
+      @version = version
       self.connectors = []
       self.product_code = nil
       self.serial_number = nil
@@ -105,6 +96,12 @@ class Hub < Device
   private
 
   def initialize(builder)
-    super
+    @product_code = builder.product_code
+    @serial_number = builder.serial_number
+    @connectors = builder.connectors
+    @version = builder.version
   end
+  
+  def_delegator :@connectors, :[], :connector
+  def_delegator :@connectors, :length, :connector_count
 end
