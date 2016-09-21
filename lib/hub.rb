@@ -24,12 +24,8 @@ module UXB
 
       def validate
         super
-        unless connectors.include? :computer
-          raise 'Need computer connector'
-        end
-        unless connectors.include? :peripheral
-          raise 'Need peripheral connector'
-        end
+        raise 'Need computer connector' unless connectors.include? :computer
+        raise 'Need peripheral connector' unless connectors.include? :peripheral
       end
     end
 

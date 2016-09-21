@@ -39,7 +39,7 @@ module UXB
     end
 
     def recv(message, connector)
-      raise 'connector must be in the device' unless connectors.include? connector
+      raise 'connector must be in device' unless connectors.include? connector
       if message.value.is_a? String
         recv_str(message, connector)
       elsif message.value.is_a? Numeric
