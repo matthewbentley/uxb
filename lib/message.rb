@@ -7,6 +7,7 @@ module UXB
 
     def initialize(value)
       @value = value.nil? ? @default_value : value
+      freeze
     end
 
     def ==(other)
