@@ -3,6 +3,7 @@ require 'forwardable'
 module UXB
   # Generic message
   module Message
+    extend Forwardable
     attr_reader :value
 
     def initialize(value)
@@ -10,13 +11,11 @@ module UXB
       freeze
     end
 
-    def ==(other)
-      value == other.value
-    end
-
     def reach(device, connector)
       device.recv(self, connector)
     end
+
+    def_delegators :@value, :==
   end
 
   # Message with an integer value
