@@ -1,4 +1,10 @@
-require 'uxb'
+require 'device'
+require 'connector'
+require 'message'
+require 'hub'
+require 'peripheral'
+require 'broadcast'
+
 RSpec.describe Connector do
   describe 'init' do
     it 'initializes properly' do
@@ -92,14 +98,55 @@ RSpec.describe Hub do
       hub_builder = Hub::Builder.new(11)
       hub_builder.product_code = 101
       hub_builder.serial_number = 1001
-      hub_builder.connectors = [Connector.new(nil, nil, :computer),
-                                Connector.new(nil, nil, :peripheral)]
+      c1 = Connector.new(nil, nil, :computer)
+      c2 = Connector.new(nil, nil, :peripheral)
+      hub_builder.connectors = [c1, c2]
       hub = hub_builder.build
       expect(hub.product_code).to eq(101)
       expect(hub.version).to eq(11)
       expect(hub.serial_number).to eq(1001)
       expect(hub.connector_count).to eq(2)
       expect(hub.device_class).to eq(:hub)
+    end
+  end
+end
+
+RSpec.describe Message do
+  describe 'broadcast' do
+    it 'works' do
+      hub_builder = Hub::Builder.new(11)
+      hub_builder.product_code = 101
+      hub_builder.serial_number = 1001
+      c1 = Connector.new(nil, nil, :computer)
+      c2 = Connector.new(nil, nil, :peripheral)
+      hub_builder.connectors = [c1, c2]
+      hub = hub_builder.build
+
+      sp_builder = SisterPrinter::Builder.new(12)
+      sp_builder.product_code = 102
+      sp_builder.serial_number = 1002
+      sp_c1 = Connector.new(nil, nil, :peripheral)
+      sp_builder.connectors = [sp_c1]
+      sp = sp_builder.build
+
+      cp_builder = CannonPrinter::Builder.new(13)
+      cp_builder.product_code = 103
+      cp_builder.serial_number = 1003
+      cp_c1 = Connector.new(nil, nil, :peripheral)
+      cp_builder.connectors = [cp_c1]
+      cp = cp_builder.build
+
+      ga_builder = GoAmateur::Builder.new(14)
+      ga_builder.product_code = 104
+      ga_builder.serial_number = 1004
+      ga_c1 = Connector.new(nil, nil, :peripheral)
+      ga_builder.connectors = [ga_c1]
+      ga = ga_builder.build
+
+      message_sring = StringMessage.new('Hello, world')
+      message_bin = BinaryMessage.new(123)
+
+      broadcast([hub, sp, cp, ga], [message_sring, message_bin])
     end
   end
 end
