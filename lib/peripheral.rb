@@ -1,4 +1,5 @@
 require 'device'
+require 'logger'
 
 # An abstract peripheral
 class Peripheral
@@ -8,6 +9,7 @@ class Peripheral
     @product_code = builder.product_code
     @serial_number = builder.serial_number
     @connectors = build_connectors(builder.connectors)
+    @logger = Logger.new(STDOUT)
   end
 
   # Builder for the abstract peripheral
@@ -40,13 +42,13 @@ class SisterPrinter < Peripheral
   end
 
   def recv_str(message, _connector)
-    puts 'Sister printer has printed the string: ' \
-      + message.value + ' ' + String(serial_number)
+    @logger.info('Sister printer has printed the string: ' + message.value +
+                 ' ' + String(serial_number.to_i))
   end
 
   def recv_bin(message, _connector)
-    puts 'Sister printer has printed the binary message: ' \
-      + String(message.value + product_code)
+    @logger.info('Sister printer has printed the binary message: ' +
+                 String(message.value + product_code.to_i))
   end
 end
 
@@ -65,13 +67,13 @@ class CannonPrinter < Peripheral
   end
 
   def recv_str(message, _connector)
-    puts 'Cannon printer has printed the string: ' \
-      + message.value + ' ' + String(version)
+    @logger.info('Cannon printer has printed the string: ' + message.value +
+                 ' ' + String(version))
   end
 
   def recv_bin(message, _connector)
-    puts 'Cannon printer has printed the binary message: ' \
-      + String(message.value * serial_number)
+    @logger.info('Cannon printer has printed the binary message: ' +
+                 String(message.value * serial_number.to_i))
   end
 end
 
@@ -91,11 +93,11 @@ class GoAmateur < Peripheral
 
   def recv_str(message, connector)
     idx = connectors.index connector
-    puts 'GoAmateur does not understand string messages: ' \
-      + message.value + ' ' + String(idx)
+    @logger.info('GoAmateur does not understand string messages: ' +
+                 message.value + ' ' + String(idx))
   end
 
   def recv_bin(message, _connector)
-    puts 'GoAmateur is not yet active: ' + String(message.value)
+    @logger.info('GoAmateur is not yet active: ' + String(message.value))
   end
 end

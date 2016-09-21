@@ -1,5 +1,6 @@
 require 'forwardable'
 require 'device'
+require 'logger'
 
 # Hub - a device
 class Hub
@@ -36,7 +37,7 @@ class Hub
   end
 
   def recv(_message, _connector)
-    puts 'recv not yet supported'
+    @logger.error('recv not yet supported')
   end
 
   def_delegator :@connectors, :[], :connector
@@ -49,5 +50,6 @@ class Hub
     @serial_number = builder.serial_number
     @connectors = build_connectors(builder.connectors)
     @version = builder.version
+    @logger = Logger.new(STDOUT)
   end
 end
