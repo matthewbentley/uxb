@@ -5,7 +5,7 @@ class Device
 
   # Builds an abstract device
   class Builder
-    attr_reader :version, :product_code, :serial_number, :connectors
+    attr_reader :version, :product_code, :serial_number
 
     def initialize(version)
       @version = version
@@ -24,6 +24,10 @@ class Device
     def connectors=(conns)
       @connectors = conns.clone
       self
+    end
+
+    def connectors
+      @connectors.clone
     end
 
     def validate
