@@ -1,7 +1,7 @@
 require 'forwardable'
 
 # Generic message
-class Message
+module Message
   attr_reader :value
 
   def initialize(value)
@@ -18,13 +18,15 @@ class Message
 end
 
 # Message with an integer value
-class BinaryMessage < Message
+class BinaryMessage
+  include Message
   @default_value = 0
 end
 
 # Message with a string value
-class StringMessage < Message
+class StringMessage
   extend Forwardable
+  include Message
   @default_value = ''
 
   def_delegators :@value, :[], :length, :include?, :start_with?, :end_with?

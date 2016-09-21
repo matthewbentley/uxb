@@ -2,8 +2,9 @@ require 'forwardable'
 require 'device'
 
 # Hub - a device
-class Hub < Device
+class Hub
   extend Forwardable
+  include Device
 
   # Builds a hub
   class Builder < Device::Builder

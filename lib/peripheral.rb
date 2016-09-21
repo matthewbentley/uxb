@@ -1,7 +1,8 @@
 require 'device'
 
 # An abstract peripheral
-class Peripheral < Device
+class Peripheral
+  include Device
   def initialize(builder)
     @version = builder.version
     @product_code = builder.product_code

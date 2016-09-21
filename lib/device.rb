@@ -1,5 +1,5 @@
 # Abstract device
-class Device
+module Device
   attr_reader :product_code, :serial_number, :version, :device_class,
               :connectors
 
