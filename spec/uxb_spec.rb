@@ -4,6 +4,7 @@ require 'message'
 require 'hub'
 require 'peripheral'
 require 'broadcast'
+include UXB
 
 RSpec.describe Connector do
   describe 'init' do
