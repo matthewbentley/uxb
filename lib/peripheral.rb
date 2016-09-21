@@ -93,11 +93,11 @@ class GoAmateur < Peripheral
 
   def recv_str(message, connector)
     idx = connectors.index connector
-    @logger.info('GoAmateur does not understand string messages: ' +
+    @logger.error('GoAmateur does not understand string messages: ' +
                  message.value + ' ' + String(idx))
   end
 
   def recv_bin(message, _connector)
-    @logger.info('GoAmateur is not yet active: ' + String(message.value))
+    @logger.warn('GoAmateur is not yet active: ' + String(message.value))
   end
 end
