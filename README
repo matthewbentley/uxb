@@ -1,0 +1,3 @@
+1. `rspec` needs to be installed
+2. Run `rspec`
+3. (optional) install and run `rubocop`
