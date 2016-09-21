@@ -1,3 +1,5 @@
+require 'connector'
+
 # Abstract device
 module Device
   attr_reader :product_code, :serial_number, :version, :device_class,
@@ -44,5 +46,13 @@ module Device
     else
       raise 'Unknown message type'
     end
+  end
+
+  def build_connectors(conn_types)
+    real_conns = []
+    conn_types.each do |type, i|
+      real_conns.push(Connector.new(self, i, type))
+    end
+    real_conns
   end
 end

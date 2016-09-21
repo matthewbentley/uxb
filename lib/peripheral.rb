@@ -7,7 +7,7 @@ class Peripheral
     @version = builder.version
     @product_code = builder.product_code
     @serial_number = builder.serial_number
-    @connectors = builder.connectors
+    @connectors = build_connectors(builder.connectors)
   end
 
   # Builder for the abstract peripheral
@@ -18,7 +18,7 @@ class Peripheral
 
     def validate
       super
-      if connectors.any? { |c| c.type != :peripheral }
+      if connectors.any? { |c| c != :peripheral }
         raise 'Connectors must be peripherals'
       end
     end

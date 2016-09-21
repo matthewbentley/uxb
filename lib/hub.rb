@@ -22,10 +22,10 @@ class Hub
 
     def validate
       super
-      unless connectors.map(&:type).include? :computer
+      unless connectors.include? :computer
         raise 'Need computer connector'
       end
-      unless connectors.map(&:type).include? :peripheral
+      unless connectors.include? :peripheral
         raise 'Need peripheral connector'
       end
     end
@@ -47,7 +47,7 @@ class Hub
   def initialize(builder)
     @product_code = builder.product_code
     @serial_number = builder.serial_number
-    @connectors = builder.connectors
+    @connectors = build_connectors(builder.connectors)
     @version = builder.version
   end
 end

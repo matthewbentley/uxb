@@ -71,22 +71,20 @@ RSpec.describe Hub::Builder do
   end
   describe 'validation' do
     it 'works when everything is in place' do
-      @hub_builder.connectors = [Connector.new(nil, nil, :computer),
-                                 Connector.new(nil, nil, :peripheral)]
+      @hub_builder.connectors = [:computer, :peripheral]
       expect(@hub_builder.validate)
     end
     it 'fails when there is no peripheral' do
-      @hub_builder.connectors = [Connector.new(nil, nil, :computer)]
+      @hub_builder.connectors = [:computer]
       expect { @hub_builder.validate }.to raise_exception
     end
     it 'fails when there is no computer' do
-      @hub_builder.connectors = [Connector.new(nil, nil, :peripheral)]
+      @hub_builder.connectors = [:peripheral]
       expect { @hub_builder.validate }.to raise_exception
     end
     it 'fails when the version is nil' do
       nil_hub = Hub::Builder.new(nil)
-      nil_hub.connectors = [Connector.new(nil, nil, :computer),
-                            Connector.new(nil, nil, :peripheral)]
+      nil_hub.connectors = [:computer, :peripheral]
       expect { nil_hub.validate }.to raise_exception
     end
   end
@@ -98,8 +96,8 @@ RSpec.describe Hub do
       hub_builder = Hub::Builder.new(11)
       hub_builder.product_code = 101
       hub_builder.serial_number = 1001
-      c1 = Connector.new(nil, nil, :computer)
-      c2 = Connector.new(nil, nil, :peripheral)
+      c1 = :computer
+      c2 = :peripheral
       hub_builder.connectors = [c1, c2]
       hub = hub_builder.build
       expect(hub.product_code).to eq(101)
@@ -117,29 +115,29 @@ RSpec.describe Message do
       hub_builder = Hub::Builder.new(11)
       hub_builder.product_code = 101
       hub_builder.serial_number = 1001
-      c1 = Connector.new(nil, nil, :computer)
-      c2 = Connector.new(nil, nil, :peripheral)
+      c1 = :computer
+      c2 = :peripheral
       hub_builder.connectors = [c1, c2]
       hub = hub_builder.build
 
       sp_builder = SisterPrinter::Builder.new(12)
       sp_builder.product_code = 102
       sp_builder.serial_number = 1002
-      sp_c1 = Connector.new(nil, nil, :peripheral)
+      sp_c1 = :peripheral
       sp_builder.connectors = [sp_c1]
       sp = sp_builder.build
 
       cp_builder = CannonPrinter::Builder.new(13)
       cp_builder.product_code = 103
       cp_builder.serial_number = 1003
-      cp_c1 = Connector.new(nil, nil, :peripheral)
+      cp_c1 = :peripheral
       cp_builder.connectors = [cp_c1]
       cp = cp_builder.build
 
       ga_builder = GoAmateur::Builder.new(14)
       ga_builder.product_code = 104
       ga_builder.serial_number = 1004
-      ga_c1 = Connector.new(nil, nil, :peripheral)
+      ga_c1 = :peripheral
       ga_builder.connectors = [ga_c1]
       ga = ga_builder.build
 
