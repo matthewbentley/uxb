@@ -41,6 +41,7 @@ module UXB
 
     def recv_str(message, _connector)
       @logger.info do
+        # these are not the same between siser and cannon
         name + ' printer has printed the string: ' + message.value + ' ' +
           String(serial_number.to_i)
       end
@@ -48,7 +49,8 @@ module UXB
 
     def recv_bin(message, _connector)
       @logger.info do
-        name + ' printer has printed the binary message: ' +
+       # these are not the same between siser and cannon
+       name + ' printer has printed the binary message: ' +
           String(message.value + product_code.to_i)
       end
     end

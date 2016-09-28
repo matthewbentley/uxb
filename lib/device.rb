@@ -1,8 +1,14 @@
 require 'connector'
+require 'message'
 
 module UXB
   # Abstract device
   module Device
+    RECV_METHOD = {
+      StringMessage => :recv_str,
+      BinaryMessage => :recv_bin
+    }.freeze
+      
     attr_reader :product_code, :serial_number, :version, :device_class,
                 :connectors
 
@@ -41,7 +47,7 @@ module UXB
     def recv(message, connector)
       raise 'connector must be in device' unless connectors.include? connector
 
-      send message_dispatch(message.class), message, connector
+      send RECV_METHOD.fetch(message.class), message, connector
     end
 
     def build_connectors(conn_types)
@@ -65,6 +71,7 @@ module UXB
     end
 
     def reachable_devices(exclude: nil)
+      # re-write to work even with cycles?
       peer_devices(exclude: exclude).reduce([]) do |all, one|
         all + [one] + one.reachable_devices(exclude: self)
       end
@@ -76,16 +83,6 @@ module UXB
         return true if i.reachable?(other, exclude: self)
       end
       false
-    end
-
-    private
-
-    def message_dispatch(type)
-      # Get the symbol referring to the function to handle the message type
-      {
-        StringMessage => :recv_str,
-        BinaryMessage => :recv_bin
-      }[type]
     end
   end
 end
