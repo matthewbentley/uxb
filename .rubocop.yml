@@ -1,0 +1,36 @@
+AllCops:
+  TargetRubyVersion: 2.3
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Metrics/MethodLength: 
+  # In Code Complete, Section 7.4, a survey on this topic is presented,
+  # and the results are inconclusive: possibly, longer routines are
+  # better in a variety of metrics up to a point, 
+  # although there is evidence that the most error-prine routines have
+  # more than 500 loc. In summary, either disable, or set the limit to 500.
+  Enabled: false
+
+Metrics/AbcSize:
+  # The Style Guide forwards to c2.com, which states that 
+  # "ABC is strictly a software size metric, 
+  # although it has often been misconstrued as a complexity metric."
+  # Therefore, there is no reason to impose a hard limit on AbcSize.
+  Enabled: false
+
+Metrics/ClassLength:
+  # Where is this criterion even coming from???
+  Enabled: false
+
+Style/RedundantReturn:
+  # And yet there are some cases when you really want to say "return this value"
+  # and not return whatever happens to be in the last line.
+  # For one thing, it prevents accidental modifications later on.
+  Enabled: false
+
+Metrics/ParameterLists:
+  # Does not properly account for keyword parameters
+  Enabled: false
+
+Style/FileName:
+  # Does not properly account for something like: require 'open'
+  Enabled: false

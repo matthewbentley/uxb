@@ -108,6 +108,24 @@ RSpec.describe Hub do
       expect(hub.device_class).to eq(:hub)
     end
   end
+  describe 'reachable' do
+    it 'works' do
+      hb1 = Hub::Builder.new(11)
+      hb1.connectors = [:computer, :computer, :peripheral, :peripheral]
+      hub1 = hb1.build
+      hub2 = hb1.build
+      hub3 = hb1.build
+      hub4 = hb1.build
+      hub1.connectors[0].peer = hub2.connectors[2]
+      hub2.connectors[0].peer = hub3.connectors[2]
+      expect(hub1.reachable_devices.length).to eq(2)
+      expect(hub2.reachable_devices.length).to eq(2)
+      expect(hub3.reachable_devices.length).to eq(2)
+      expect(hub1.reachable?(hub2)).to eq(true)
+      expect(hub1.reachable?(hub3)).to eq(true)
+      expect(hub4.reachable?(hub1)).to eq(false)
+    end
+  end
 end
 
 RSpec.describe Message do

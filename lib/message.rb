@@ -11,10 +11,6 @@ module UXB
       freeze
     end
 
-    def reach(device, connector)
-      device.recv(self, connector)
-    end
-
     def_delegators :@value, :==
   end
 

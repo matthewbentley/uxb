@@ -20,53 +20,69 @@ module UXB
     end
   end
 
-  # A sister printer
-  class SisterPrinter < Peripheral
+  # A printer
+  class APrinter < Peripheral
     def device_class
       :PRINTER
     end
 
-    # Builder for the sister printer
+    # A Printer builder
     class Builder < Peripheral::Builder
       def build
         validate
-        SisterPrinter.new(self)
+        make
+      end
+
+      private
+
+      def make
       end
     end
 
     def recv_str(message, _connector)
-      @logger.info { 'Sister printer has printed the string: ' + message.value
-                     + ' ' + String(serial_number.to_i) }
+      @logger.info do
+        name + ' printer has printed the string: ' + message.value + ' ' +
+          String(serial_number.to_i)
+      end
     end
 
     def recv_bin(message, _connector)
-      @logger.info { 'Sister printer has printed the binary message: ' +
-                     String(message.value + product_code.to_i) }
+      @logger.info do
+        name + ' printer has printed the binary message: ' +
+          String(message.value + product_code.to_i)
+      end
     end
   end
 
-  # A cannon printer
-  class CannonPrinter < Peripheral
-    def device_class
-      :PRINTER
+  # A sister printer
+  class SisterPrinter < APrinter
+    def name
+      'Sister'
     end
 
-    # Builder for the cannon printer
-    class Builder < Peripheral::Builder
-      def build
-        validate
-        CannonPrinter.new(self)
+    # A Sister builder
+    class Builder < APrinter::Builder
+      private
+
+      def make
+        SisterPrinter.new(self)
       end
     end
+  end
 
-    def recv_str(message, _connector)
-      @logger.info { 'Cannon printer has printed the string: ' + message.value
-                     + ' ' + String(version) }
+  # Cannon printer
+  class CannonPrinter < APrinter
+    def name
+      'Cannon'
     end
 
-    def recv_bin(message, _connector)
-      @logger.info { 'Cannon printer has printed the binary message: ' +
-                     String(message.value * serial_number.to_i) }
+    # Cannon builder
+    class Builder < APrinter::Builder
+      private
+
+      def make
+        CannonPrinter.new(self)
+      end
     end
   end
 
@@ -86,8 +102,10 @@ module UXB
 
     def recv_str(message, connector)
       idx = connectors.index connector
-      @logger.error { 'GoAmateur does not understand string messages: ' +
-                      message.value + ' ' + String(idx) }
+      @logger.error do
+        'GoAmateur does not understand string messages: ' + message.value +
+          ' ' + String(idx)
+      end
     end
 
     def recv_bin(message, _connector)

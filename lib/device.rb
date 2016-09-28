@@ -40,14 +40,8 @@ module UXB
 
     def recv(message, connector)
       raise 'connector must be in device' unless connectors.include? connector
-      # use message.is_a? and a case statement
-      if message.value.is_a? String
-        recv_str(message, connector)
-      elsif message.value.is_a? Numeric
-        recv_bin(message, connector)
-      else
-        raise 'Unknown message type'
-      end
+
+      send message_dispatch(message.class), message, connector
     end
 
     def build_connectors(conn_types)
@@ -62,6 +56,36 @@ module UXB
       @serial_number = builder.serial_number
       @connectors = build_connectors(builder.connectors)
       @logger = Logger.new(STDOUT)
+    end
+
+    def peer_devices(exclude: nil)
+      connectors.map { |conn| conn.peer&.device }
+                .compact
+                .reject { |i| i == exclude }
+    end
+
+    def reachable_devices(exclude: nil)
+      peer_devices(exclude: exclude).reduce([]) do |all, one|
+        all + [one] + one.reachable_devices(exclude: self)
+      end
+    end
+
+    def reachable?(other, exclude: nil)
+      return true if connectors.map { |conn| conn.peer&.device }.include? other
+      peer_devices(exclude: exclude).each do |i|
+        return true if i.reachable?(other, exclude: self)
+      end
+      false
+    end
+
+    private
+
+    def message_dispatch(type)
+      # Get the symbol referring to the function to handle the message type
+      {
+        StringMessage => :recv_str,
+        BinaryMessage => :recv_bin
+      }[type]
     end
   end
 end
