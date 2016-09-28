@@ -34,7 +34,7 @@ module UXB
     end
 
     def recv(_message, _connector)
-      @logger.error('recv not yet supported')
+      @logger.error { 'recv not yet supported' }
     end
 
     def_delegator :@connectors, :[], :connector

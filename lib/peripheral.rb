@@ -35,13 +35,13 @@ module UXB
     end
 
     def recv_str(message, _connector)
-      @logger.info('Sister printer has printed the string: ' + message.value +
-                   ' ' + String(serial_number.to_i))
+      @logger.info { 'Sister printer has printed the string: ' + message.value
+                     + ' ' + String(serial_number.to_i) }
     end
 
     def recv_bin(message, _connector)
-      @logger.info('Sister printer has printed the binary message: ' +
-                   String(message.value + product_code.to_i))
+      @logger.info { 'Sister printer has printed the binary message: ' +
+                     String(message.value + product_code.to_i) }
     end
   end
 
@@ -60,13 +60,13 @@ module UXB
     end
 
     def recv_str(message, _connector)
-      @logger.info('Cannon printer has printed the string: ' + message.value +
-                   ' ' + String(version))
+      @logger.info { 'Cannon printer has printed the string: ' + message.value
+                     + ' ' + String(version) }
     end
 
     def recv_bin(message, _connector)
-      @logger.info('Cannon printer has printed the binary message: ' +
-                   String(message.value * serial_number.to_i))
+      @logger.info { 'Cannon printer has printed the binary message: ' +
+                     String(message.value * serial_number.to_i) }
     end
   end
 
@@ -86,12 +86,12 @@ module UXB
 
     def recv_str(message, connector)
       idx = connectors.index connector
-      @logger.error('GoAmateur does not understand string messages: ' +
-                   message.value + ' ' + String(idx))
+      @logger.error { 'GoAmateur does not understand string messages: ' +
+                      message.value + ' ' + String(idx) }
     end
 
     def recv_bin(message, _connector)
-      @logger.warn('GoAmateur is not yet active: ' + String(message.value))
+      @logger.warn { 'GoAmateur is not yet active: ' + String(message.value) }
     end
   end
 end

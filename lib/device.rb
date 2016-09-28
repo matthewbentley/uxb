@@ -51,11 +51,9 @@ module UXB
     end
 
     def build_connectors(conn_types)
-      real_conns = []
-      conn_types.each.with_index do |type, i|
-        real_conns.push(Connector.new(self, i, type))
+      conn_types.map.with_index do |type, i|
+        Connector.new(self, i, type)
       end
-      real_conns
     end
 
     def initialize(builder)
