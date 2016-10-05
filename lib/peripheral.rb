@@ -40,19 +40,11 @@ module UXB
     end
 
     def recv_str(message, _connector)
-      @logger.info do
-        # these are not the same between siser and cannon
-        name + ' printer has printed the string: ' + message.value + ' ' +
-          String(serial_number.to_i)
-      end
+      @logger.info { str_msg(message) }
     end
 
     def recv_bin(message, _connector)
-      @logger.info do
-       # these are not the same between siser and cannon
-       name + ' printer has printed the binary message: ' +
-          String(message.value + product_code.to_i)
-      end
+      @logger.info { bin_msg(message) }
     end
   end
 
@@ -60,6 +52,15 @@ module UXB
   class SisterPrinter < APrinter
     def name
       'Sister'
+    end
+
+    def str_msg(message)
+      "Sister printer has printed the string: #{message.value} #{serial_number}"
+    end
+
+    def bin_msg(message)
+      "Sister printer has printed the bin message: #{message.value}
+        #{product_code}"
     end
 
     # A Sister builder
@@ -76,6 +77,15 @@ module UXB
   class CannonPrinter < APrinter
     def name
       'Cannon'
+    end
+
+    def str_msg(message)
+      "Cannon printer has printed the string: #{message.value} #{version}"
+    end
+
+    def bin_msg(message)
+      product = serial_number.nil? ? '' : message.value * serial_number
+      "Cannon printer has printed the bin message: #{message} #{product}"
     end
 
     # Cannon builder

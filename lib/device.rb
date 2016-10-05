@@ -8,7 +8,7 @@ module UXB
       StringMessage => :recv_str,
       BinaryMessage => :recv_bin
     }.freeze
-      
+
     attr_reader :product_code, :serial_number, :version, :device_class,
                 :connectors
 
