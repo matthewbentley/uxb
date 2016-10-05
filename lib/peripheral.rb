@@ -85,7 +85,7 @@ module UXB
 
     def bin_msg(message)
       product = serial_number.nil? ? '' : message.value * serial_number
-      "Cannon printer has printed the bin message: #{message} #{product}"
+      "Cannon printer has printed the bin message: #{message.value} #{product}"
     end
 
     # Cannon builder
