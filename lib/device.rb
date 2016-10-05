@@ -64,25 +64,31 @@ module UXB
       @logger = Logger.new(STDOUT)
     end
 
-    def peer_devices(exclude: nil)
-      connectors.map { |conn| conn.peer&.device }
-                .compact
-                .reject { |i| i == exclude }
+    def peer_devices
+      connectors.map { |conn| conn.peer&.device }.compact
     end
 
-    def reachable_devices(exclude: nil)
+    def reachable_devices
       # re-write to work even with cycles?
-      peer_devices(exclude: exclude).reduce([]) do |all, one|
-        all + [one] + one.reachable_devices(exclude: self)
-      end
+      device_enumerator
     end
 
-    def reachable?(other, exclude: nil)
-      return true if connectors.map { |conn| conn.peer&.device }.include? other
-      peer_devices(exclude: exclude).each do |i|
-        return true if i.reachable?(other, exclude: self)
-      end
+    def reachable?(other)
+      device_enumerator { |d| return true if d == other }
       false
+    end
+
+    private
+
+    def device_enumerator
+      devs = peer_devices
+      index = 0
+      loop do
+        return devs.reject { |d| d == self } if index == devs.length
+        yield devs[index] if block_given?
+        devs += devs[index].peer_devices.reject { |d| devs.include? d }
+        index += 1
+      end
     end
   end
 end
