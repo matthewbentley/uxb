@@ -120,8 +120,9 @@ module UXB
       end
     end
 
-    def recv_bin(message, _connector)
-      @logger.warn { 'GoAmateur is not yet active: ' + String(message.value) }
+    def recv_bin(_message, _connector)
+      m = BinaryMessage.new(293)
+      connectors.each { |c| c.peer.recv(m) unless c.peer.nil? }
     end
   end
 end

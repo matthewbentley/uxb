@@ -134,17 +134,23 @@ RSpec.describe Message do
       hub_builder = Hub::Builder.new(11)
       hub_builder.product_code = 101
       hub_builder.serial_number = 1001
-      c1 = :computer
-      c2 = :peripheral
-      hub_builder.connectors = [c1, c2]
-      hub = hub_builder.build
+      hub_builder.connectors = [:computer, :computer, :peripheral, :peripheral,
+                                :computer]
+      hub1 = hub_builder.build
+      hub2 = hub_builder.build
+      hub3 = hub_builder.build
+      hub1.connectors[0].peer = hub2.connectors[2]
+      hub2.connectors[0].peer = hub3.connectors[2]
 
       sp_builder = SisterPrinter::Builder.new(12)
       sp_builder.product_code = 102
       sp_builder.serial_number = 1002
       sp_c1 = :peripheral
       sp_builder.connectors = [sp_c1]
-      sp = sp_builder.build
+      sp1 = sp_builder.build
+      sp2 = sp_builder.build
+      hub3.connectors[1].peer = sp1.connectors[0]
+      hub2.connectors[1].peer = sp2.connectors[0]
 
       cp_builder = CannonPrinter::Builder.new(13)
       cp_builder.product_code = 103
@@ -152,6 +158,7 @@ RSpec.describe Message do
       cp_c1 = :peripheral
       cp_builder.connectors = [cp_c1]
       cp = cp_builder.build
+      hub1.connectors[1].peer = cp.connectors[0]
 
       ga_builder = GoAmateur::Builder.new(14)
       ga_builder.product_code = 104
@@ -159,11 +166,12 @@ RSpec.describe Message do
       ga_c1 = :peripheral
       ga_builder.connectors = [ga_c1]
       ga = ga_builder.build
+      hub3.connectors[4].peer = ga.connectors[0]
 
       message_sring = StringMessage.new('Hello, world')
       message_bin = BinaryMessage.new(123)
 
-      broadcast([hub, sp, cp, ga], [message_sring, message_bin])
+      broadcast([hub1, sp1, cp, ga], [message_sring, message_bin])
     end
   end
 end

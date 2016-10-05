@@ -33,8 +33,9 @@ module UXB
       :hub
     end
 
-    def recv(_message, _connector)
-      @logger.error { 'recv not yet supported' }
+    def recv(message, connector)
+      connectors.reject { |c| c == connector || c.peer.nil? }
+                .each   { |c| c.peer.recv(message) }
     end
 
     def_delegator :@connectors, :[], :connector
